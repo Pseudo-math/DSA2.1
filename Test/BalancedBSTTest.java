@@ -42,4 +42,5 @@ class BalancedBSTTest {
         assertNull(bst.Root, "Tree generated from empty array should have null root");
         assertTrue(bst.IsBalanced(bst.Root), "Empty tree should be balanced");
     }
+
 }
