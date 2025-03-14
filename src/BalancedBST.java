@@ -58,12 +58,26 @@ class BalancedBST
     }
     public void GenerateTreeHelper(int[] sorted, int start, int end, BSTNode parent)
     {
-        int mid = (end - start) / 2;
+        if (start >= end) return;
+        int mid = start + (end - start) / 2;
         var addedNode = AddNode(sorted[mid], parent);
-        GenerateTreeHelper(sorted, start, mid, addedNode);
+        GenerateTreeHelper(sorted, start, mid , addedNode);
         GenerateTreeHelper(sorted, mid + 1, end, addedNode);
 
     }
+    public boolean IsRight(BSTNode root_node) {
+        return isBST(root_node, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private boolean isBST(BSTNode node, int min, int max) {
+        if (node == null) return true;
+
+        if (node.NodeKey < min || node.NodeKey > max) return false;
+
+        return isBST(node.LeftChild, min, node.NodeKey - 1) &&
+                isBST(node.RightChild, node.NodeKey + 1, max);
+    }
+
     public boolean IsBalanced(BSTNode root_node)
     {
         if (root_node == null)
@@ -84,7 +98,7 @@ class BalancedBST
             return -1;
         if (leftTreeLevel >= rightTreeLevel + 2 || rightTreeLevel >= leftTreeLevel + 2)
             return -1;
-        return Math.max(leftTreeLevel, rightTreeLevel);
+        return Math.max(leftTreeLevel, rightTreeLevel) + 1;
     }
 
 }  
