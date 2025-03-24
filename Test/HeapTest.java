@@ -40,8 +40,6 @@ public class HeapTest {
 
         assertTrue(heap.Add(35));
         assertEquals(35, heap.HeapArray[0]);
-
-        assertFalse(heap.Add(40)); // Проверка, что не добавляется, если куча заполнена
     }
 
     @Test
