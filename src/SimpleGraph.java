@@ -51,7 +51,7 @@ class SimpleGraph
 
     public boolean IsEdge(int v1, int v2)
     {
-        return  (m_adjacency[v1][v1] == 1 && m_adjacency[v2][v2] == 1);
+        return  (m_adjacency[v1][v2] == 1 && m_adjacency[v2][v1] == 1);
     }
 
     public void AddEdge(int v1, int v2)
