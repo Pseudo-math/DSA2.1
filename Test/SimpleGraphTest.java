@@ -103,6 +103,7 @@ class SimpleGraphTest {
         ArrayList<Vertex> path = graph.DepthFirstSearch(0, 2);
         assertTrue(path.isEmpty());
     }
+
     @Test
     void testSimplePathExists() {
         SimpleGraph graph = new SimpleGraph(3);
@@ -176,6 +177,7 @@ class SimpleGraphTest {
         assertEquals(1, path.size());
         assertEquals(42, path.get(0).Value);
     }
+
     private SimpleGraph graph;
 
     // Helper method to extract vertex values from the result list for easier comparison
@@ -202,7 +204,7 @@ class SimpleGraphTest {
             Vertex v = path.get(i + 1);
             int uIndex = -1, vIndex = -1;
             // Find indices (assuming values are unique for this test helper)
-            for(int j=0; j<g.max_vertex; ++j) {
+            for (int j = 0; j < g.max_vertex; ++j) {
                 if (g.vertex[j] != null && g.vertex[j].Value == u.Value) uIndex = j;
                 if (g.vertex[j] != null && g.vertex[j].Value == v.Value) vIndex = j;
             }
@@ -245,8 +247,12 @@ class SimpleGraphTest {
     @DisplayName("DFS_02: No path between disconnected components")
     void testNoPathDisconnected() {
         graph = new SimpleGraph(6);
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2); // Component 1
-        graph.AddVertex(10); graph.AddVertex(11); graph.AddVertex(12); // Component 2
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2); // Component 1
+        graph.AddVertex(10);
+        graph.AddVertex(11);
+        graph.AddVertex(12); // Component 2
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 2);
         graph.AddEdge(3, 4); // Indices for 10, 11
@@ -266,8 +272,12 @@ class SimpleGraphTest {
         // 0 -> 1 -> 2 -> 3 (Target)
         // ^    |    ^
         // |----4 -> 5
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2);
-        graph.AddVertex(3); graph.AddVertex(4); graph.AddVertex(5);
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 2);
         graph.AddEdge(2, 3); // Path to target
@@ -292,8 +302,13 @@ class SimpleGraphTest {
         //    1   4 -- 5 (Dead End)
         //   / \   \
         //  2   3   6 (Target)
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2); graph.AddVertex(3);
-        graph.AddVertex(4); graph.AddVertex(5); graph.AddVertex(6);
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+        graph.AddVertex(6);
         graph.AddEdge(0, 1);
         graph.AddEdge(0, 4);
         graph.AddEdge(1, 2);
@@ -318,7 +333,9 @@ class SimpleGraphTest {
     @DisplayName("DFS_05: Start and End nodes are the same")
     void testStartEqualsEnd() {
         graph = new SimpleGraph(3);
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2);
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 2);
 
@@ -331,7 +348,9 @@ class SimpleGraphTest {
     @DisplayName("DFS_06: Graph with isolated vertex")
     void testIsolatedVertex() {
         graph = new SimpleGraph(4);
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2); // Connected component
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2); // Connected component
         graph.AddVertex(10); // Isolated vertex at index 3
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 2);
@@ -354,7 +373,8 @@ class SimpleGraphTest {
     @DisplayName("DFS_07: Invalid vertex indices")
     void testInvalidIndices() {
         graph = new SimpleGraph(3);
-        graph.AddVertex(0); graph.AddVertex(1);
+        graph.AddVertex(0);
+        graph.AddVertex(1);
         graph.AddEdge(0, 1);
 
         ArrayList<Vertex> path;
@@ -389,14 +409,26 @@ class SimpleGraphTest {
         //       3 -- 4 -- 5
         //       |    |    |
         //       6 -- 7 ---
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2); graph.AddVertex(3);
-        graph.AddVertex(4); graph.AddVertex(5); graph.AddVertex(6); graph.AddVertex(7);
-        graph.AddEdge(0, 1); graph.AddEdge(1, 2); // Direct path
-        graph.AddEdge(0, 3); graph.AddEdge(3, 4); graph.AddEdge(4, 1); // Path via 3, 4
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
+        graph.AddVertex(4);
+        graph.AddVertex(5);
+        graph.AddVertex(6);
+        graph.AddVertex(7);
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2); // Direct path
+        graph.AddEdge(0, 3);
+        graph.AddEdge(3, 4);
+        graph.AddEdge(4, 1); // Path via 3, 4
         graph.AddEdge(0, 4); // Shortcut
-        graph.AddEdge(1, 5); graph.AddEdge(5, 2); // Path via 5
+        graph.AddEdge(1, 5);
+        graph.AddEdge(5, 2); // Path via 5
         graph.AddEdge(4, 5);
-        graph.AddEdge(3, 6); graph.AddEdge(6, 7); graph.AddEdge(7, 4); // Longer loop
+        graph.AddEdge(3, 6);
+        graph.AddEdge(6, 7);
+        graph.AddEdge(7, 4); // Longer loop
         graph.AddEdge(5, 7); // Another connection
 
         ArrayList<Vertex> path = graph.DepthFirstSearch(0, 2);
@@ -424,7 +456,10 @@ class SimpleGraphTest {
         // OR the test runner creating new graph instances (@BeforeEach helps).
         // We'll test as if flags *should* be reset by the method itself.
         graph = new SimpleGraph(4);
-        graph.AddVertex(0); graph.AddVertex(1); graph.AddVertex(2); graph.AddVertex(3);
+        graph.AddVertex(0);
+        graph.AddVertex(1);
+        graph.AddVertex(2);
+        graph.AddVertex(3);
         graph.AddEdge(0, 1);
         graph.AddEdge(1, 2);
         graph.AddEdge(0, 3); // Alternative path branch
