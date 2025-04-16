@@ -51,7 +51,7 @@ class SimpleGraph
 
     public boolean IsEdge(int v1, int v2)
     {
-        return  (m_adjacency[v1][v1] == 1 && m_adjacency[v2][v2] == 1);
+        return  (m_adjacency[v1][v2] == 1 && m_adjacency[v2][v1] == 1);
     }
 
     public void AddEdge(int v1, int v2)
@@ -117,50 +117,5 @@ class SimpleGraph
 
         return new ArrayList<>();
     }
-    public ArrayList<Vertex> BreadthFirstSearch(int VFrom, int VTo) {
-        ArrayList<Vertex> path = new ArrayList<>();
 
-        if (VFrom < 0 || VFrom >= max_vertex || VTo < 0 || VTo >= max_vertex
-                || vertex[VFrom] == null || vertex[VTo] == null) {
-            return path;
-        }
-
-        for (int i = 0; i < max_vertex; i++) {
-            if (vertex[i] != null) {
-                vertex[i].Hit = false;
-            }
-        }
-
-        Queue<Integer> queue = new LinkedList<>();
-        int[] parents = new int[max_vertex];
-        Arrays.fill(parents, -1); // для восстановления пути
-
-        vertex[VFrom].Hit = true;
-        queue.add(VFrom);
-
-        while (!queue.isEmpty()) {
-            int current = queue.poll();
-
-            if (current == VTo) {
-                LinkedList<Vertex> reversePath = new LinkedList<>();
-                int step = VTo;
-                while (step != -1) {
-                    reversePath.addFirst(vertex[step]);
-                    step = parents[step];
-                }
-                path.addAll(reversePath);
-                return path;
-            }
-
-            for (int i = 0; i < max_vertex; i++) {
-                if (m_adjacency[current][i] == 0 && vertex[i] != null && !vertex[i].Hit) {
-                    vertex[i].Hit = true;
-                    parents[i] = current;
-                    queue.add(i);
-                }
-            }
-        }
-
-        return path;
-    }
 }
