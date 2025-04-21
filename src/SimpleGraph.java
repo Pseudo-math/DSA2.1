@@ -51,7 +51,7 @@ class SimpleGraph
 
     public boolean IsEdge(int v1, int v2)
     {
-        return  (m_adjacency[v1][v1] == 1 && m_adjacency[v2][v2] == 1);
+        return  (m_adjacency[v1][v2] == 1 && m_adjacency[v2][v1] == 1);
     }
 
     public void AddEdge(int v1, int v2)
@@ -157,7 +157,7 @@ class SimpleGraph
             }
 
             for (int i = 0; i < max_vertex; i++) {
-                if (m_adjacency[current][i] == 0 && vertex[i] != null && !vertex[i].Hit) {
+                if (m_adjacency[current][i] == 1 && vertex[i] != null && !vertex[i].Hit) {
                     vertex[i].Hit = true;
                     parents[i] = current;
                     queue.add(i);
