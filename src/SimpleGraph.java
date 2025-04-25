@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.IntStream;
 
 class Vertex
 {
@@ -168,4 +169,70 @@ class SimpleGraph
         return path; // Путь не найден
     }
 
+    boolean IsConnected()
+    {
+        OptionalInt maybeInit  = IntStream.range(0, vertex.length)
+            .filter(i -> vertex[i] != null)
+            .findAny();
+        if (maybeInit.isEmpty())
+           return true;
+        int init = maybeInit.getAsInt();
+
+        for (Vertex i : vertex)
+            if (i != null)
+                i.Hit = false;
+
+        Stack<Integer> path = new Stack<>();
+        path.push(init);
+        for (Integer current = init; !path.isEmpty(); current = path.peek())
+        {
+            vertex[current].Hit = true;
+
+            Integer finalCurrent = current;
+            OptionalInt maybeNext = IntStream.range(0, m_adjacency[current].length)
+                    .filter(i -> m_adjacency[finalCurrent][i] == 1 && !vertex[i].Hit)
+                    .findFirst();
+            if (maybeNext.isPresent())
+                path.push(maybeNext.getAsInt());
+            else
+                path.pop();
+        }
+        return Arrays.stream(vertex)
+                .filter(Objects::nonNull)
+                .allMatch(v -> v.Hit);
+    }
+    public ArrayList<Vertex> WeakVertices()
+    {
+        ArrayList<Vertex> weak = new ArrayList<>();
+
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] == null) continue;
+
+            ArrayList<Integer> neighbors = new ArrayList<>();
+            for (int j = 0; j < max_vertex; j++) {
+                if (m_adjacency[i][j] == 1) {
+                    neighbors.add(j);
+                }
+            }
+
+            boolean inTriangle = false;
+            for (int a = 0; a < neighbors.size(); a++) {
+                for (int b = a + 1; b < neighbors.size(); b++) {
+                    int u = neighbors.get(a);
+                    int v = neighbors.get(b);
+                    if (m_adjacency[u][v] == 1) {
+                        inTriangle = true;
+                        break;
+                    }
+                }
+                if (inTriangle) break;
+            }
+
+            if (inTriangle) {
+                weak.add(vertex[i]);
+            }
+        }
+
+        return weak;
+    }
 }

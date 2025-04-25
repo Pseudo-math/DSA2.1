@@ -1,10 +1,9 @@
 import org.junit.jupiter.api.Test;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -483,4 +482,87 @@ class SimpleGraphTest {
         // assertFalse(graph.vertex[3].Hit);
         // Note: The provided code *does* reset flags at the start, so this test should pass.
     }
+    @Test
+    public void testWeakVertices_TriangleAndIsolated() {
+        // Граф из 4 вершин:
+        // 0 - 1 - 2 образуют треугольник (0-1-2-0)
+        // 3 — изолированная вершина (слабая)
+
+        SimpleGraph graph = new SimpleGraph(4);
+        for (int i = 0; i < 4; i++) {
+            graph.AddVertex(i);
+        }
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 0);
+
+        ArrayList<Vertex> weak = graph.WeakVertices();
+        assertEquals(1, weak.size());
+        assertEquals(3, weak.get(0).Value);
+    }
+
+    @Test
+    public void testWeakVertices_AllWeak() {
+        // Граф: все вершины по одной связи (линии), нет треугольников
+        // 0 - 1 - 2 - 3
+
+        SimpleGraph graph = new SimpleGraph(4);
+        for (int i = 0; i < 4; i++) {
+            graph.AddVertex(i);
+        }
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 3);
+
+        ArrayList<Vertex> weak = graph.WeakVertices();
+        assertEquals(4, weak.size());
+
+        Set<Integer> expected = Set.of(0, 1, 2, 3);
+        Set<Integer> actual = new HashSet<>();
+        for (Vertex v : weak) {
+            actual.add(v.Value);
+        }
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testWeakVertices_AllInTriangle() {
+        // Полный граф из 3 вершин — все в треугольнике
+
+        SimpleGraph graph = new SimpleGraph(3);
+        for (int i = 0; i < 3; i++) {
+            graph.AddVertex(i);
+        }
+
+        graph.AddEdge(0, 1);
+        graph.AddEdge(1, 2);
+        graph.AddEdge(2, 0);
+
+        ArrayList<Vertex> weak = graph.WeakVertices();
+        assertEquals(0, weak.size());
+    }
+    @Test
+    public void testWeakVertices_SingletonVertex() {
+        // Граф с одной вершиной без рёбер
+
+        SimpleGraph graph = new SimpleGraph(1);
+        graph.AddVertex(42);
+
+        ArrayList<Vertex> weak = graph.WeakVertices();
+        assertEquals(1, weak.size());
+        assertEquals(42, weak.get(0).Value);
+    }
+
+    @Test
+    public void testWeakVertices_EmptyGraph() {
+        // Граф без добавленных вершин
+
+        SimpleGraph graph = new SimpleGraph(5); // 5 возможных слотов, но ни одной вершины
+
+        ArrayList<Vertex> weak = graph.WeakVertices();
+        assertEquals(0, weak.size());
+    }
+
 }
