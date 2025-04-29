@@ -184,8 +184,9 @@ class SimpleGraph
 
         Stack<Integer> path = new Stack<>();
         path.push(init);
-        for (Integer current = init; !path.isEmpty(); current = path.peek())
+        for (Integer current; !path.isEmpty();)
         {
+            current = path.peek();
             vertex[current].Hit = true;
 
             Integer finalCurrent = current;
@@ -228,7 +229,7 @@ class SimpleGraph
                 if (inTriangle) break;
             }
 
-            if (inTriangle) {
+            if (!inTriangle) {
                 weak.add(vertex[i]);
             }
         }
