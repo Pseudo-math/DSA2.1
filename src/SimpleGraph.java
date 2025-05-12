@@ -236,4 +236,109 @@ class SimpleGraph
 
         return weak;
     }
+
+    public int[] findFarthestNodes() {
+        int startVertex = -1;
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] != null) {
+                startVertex = i;
+                break;
+            }
+        }
+        if (startVertex == -1) {
+            return new int[]{-1, -1}; // Граф пуст
+        }
+
+        int nodeB = bfsFarthestNode(startVertex);
+
+        int nodeC = bfsFarthestNode(nodeB);
+
+        return new int[]{nodeB, nodeC};
+    }
+
+    private int bfsFarthestNode(int start) {
+        if (vertex[start] == null) return -1;
+
+        Queue<Integer> queue = new LinkedList<>();
+        int[] distances = new int[max_vertex];
+        Arrays.fill(distances, -1);
+
+        queue.add(start);
+        distances[start] = 0;
+        int farthestNode = start;
+        int maxDistance = 0;
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+
+            for (int i = 0; i < max_vertex; i++) {
+                if (m_adjacency[current][i] == 1 && vertex[i] != null && distances[i] == -1) {
+                    distances[i] = distances[current] + 1;
+                    queue.add(i);
+                    if (distances[i] > maxDistance) {
+                        maxDistance = distances[i];
+                        farthestNode = i;
+                    }
+                }
+            }
+        }
+
+        return farthestNode;
+    }
+
+    public int countTriangles() {
+        Set<String> triangles = new HashSet<>();
+
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] == null) continue;
+
+            for (int j = i + 1; j < max_vertex; j++) {
+                if (vertex[j] == null || m_adjacency[i][j] != 1) continue;
+
+                for (int k = j + 1; k < max_vertex; k++) {
+                    if (vertex[k] == null || m_adjacency[j][k] != 1 || m_adjacency[i][k] != 1) continue;
+
+                    // Формируем уникальную строку для треугольника (i, j, k)
+                    int[] nodes = {i, j, k};
+                    Arrays.sort(nodes);
+                    String triangle = nodes[0] + "," + nodes[1] + "," + nodes[2];
+
+                    triangles.add(triangle);
+                }
+            }
+        }
+
+        return triangles.size();
+    }
+
+    public ArrayList<Vertex> findNonTriangleVertices() {
+        ArrayList<Vertex> result = new ArrayList<>();
+        Set<Integer> triangleVertices = new HashSet<>();
+
+        // Собираем все вершины, участвующие в треугольниках
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] == null) continue;
+
+            for (int j = i + 1; j < max_vertex; j++) {
+                if (vertex[j] == null || m_adjacency[i][j] != 1) continue;
+
+                for (int k = j + 1; k < max_vertex; k++) {
+                    if (vertex[k] == null || m_adjacency[j][k] != 1 || m_adjacency[i][k] != 1) continue;
+
+                    triangleVertices.add(i);
+                    triangleVertices.add(j);
+                    triangleVertices.add(k);
+                }
+            }
+        }
+
+        // Добавляем в результат все вершины, не входящие в треугольники
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] != null && !triangleVertices.contains(i)) {
+                result.add(vertex[i]);
+            }
+        }
+
+        return result;
+    }
 }

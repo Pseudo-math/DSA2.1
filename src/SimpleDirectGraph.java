@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.*;
 
 class SimpleDirectGraph
 {
@@ -96,4 +96,87 @@ class SimpleDirectGraph
         return false;
     }
 
+    public List<Integer> findLongestPath() {
+        List<Integer> longestPath = new ArrayList<>();
+        List<Integer> currentPath = new ArrayList<>();
+        boolean[] visited = new boolean[max_vertex];
+
+        for (int i = 0; i < max_vertex; i++) {
+            if (vertex[i] != null) {
+                DFSLongestPath(i, visited, currentPath, longestPath);
+            }
+        }
+        return longestPath;
+    }
+
+    private void DFSLongestPath(int v, boolean[] visited, List<Integer> currentPath, List<Integer> longestPath) {
+        if (vertex[v] == null) return;
+
+        visited[v] = true;
+        currentPath.add(v);
+
+        if (currentPath.size() > longestPath.size()) {
+            longestPath.clear();
+            longestPath.addAll(currentPath);
+        }
+
+        for (int i = 0; i < max_vertex; i++) {
+            if (m_adjacency[v][i] == 1 && !visited[i] && vertex[i] != null) {
+                DFSLongestPath(i, visited, currentPath, longestPath);
+            }
+        }
+
+        visited[v] = false;
+        currentPath.removeLast();
+    }
+
+    public List<List<Integer>> findAllCycles() {
+        List<List<Integer>> cycles = new ArrayList<>();
+        boolean[] visited = new boolean[max_vertex];
+        int[] parent = new int[max_vertex];
+        Arrays.fill(parent, -1);
+
+        // Проверяем каждую вершину как стартовую
+        for (int start = 0; start < max_vertex; start++) {
+            if (vertex[start] == null || visited[start]) continue;
+
+            Queue<Integer> queue = new LinkedList<>();
+            queue.add(start);
+            visited[start] = true;
+
+            while (!queue.isEmpty()) {
+                int current = queue.poll();
+
+                // Проверяем всех соседей текущей вершины
+                for (int neighbor = 0; neighbor < max_vertex; neighbor++) {
+                    if (m_adjacency[current][neighbor] != 1 || vertex[neighbor] == null) continue;
+
+                    // Если сосед уже посещён и не является родителем, найден цикл
+                    if (visited[neighbor] && neighbor != parent[current]) {
+                        // Восстанавливаем цикл
+                        List<Integer> cycle = new ArrayList<>();
+                        cycle.add(neighbor); // Конечная вершина цикла
+                        int v = current;
+                        while (v != neighbor && v != -1) {
+                            cycle.add(v);
+                            v = parent[v];
+                        }
+                        if (v == neighbor) { // Убедимся, что путь замкнулся
+                            cycle.add(neighbor); // Замыкаем цикл
+                            Collections.reverse(cycle); // Для корректного порядка
+                            cycles.add(cycle);
+                        }
+                    }
+                    // Если сосед не посещён, добавляем его в очередь
+                    else if (!visited[neighbor]) {
+                        visited[neighbor] = true;
+                        parent[neighbor] = current;
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        return cycles;
+    }
 }
